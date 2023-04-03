@@ -19,6 +19,7 @@ app = Flask(__name__)
 def gastos_deputados():
   return "olá"
 
+@app.route('/sobre')
 #Acessando a API da Câmara dos Deputados e já selecionando e ordenando por estado do Nordeste
 url = 'https://dadosabertos.camara.leg.br/api/v2/deputados'
 params = {
@@ -108,7 +109,6 @@ nome_estabelecimento=df_despesas['nomeFornecedor']
 nome_estabelecimento
 
 #datas e dias da semana
-from datetime import date, datetime
 
 hj = date.today()
 dias = ('terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo', 'segunda-feira')
@@ -163,22 +163,6 @@ for index, row in df_despesas.iterrows():
     # junta todas as linhas em uma única string
     textofinal = "".join(linhas)
     print(textofinal)
-
-
-
-
-
-
-
-
-import getpass
-import requests
-token=getpass.getpass()
-
-!pip install sendgrid
-import sendgrid
-import os
-from sendgrid.helpers.mail import Mail, Email, To, Content
 
 sg = sendgrid.SendGridAPIClient(token)
 from_email = Email("ola@agenciatatu.com.br")  # Change to your verified sender
