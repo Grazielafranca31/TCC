@@ -64,6 +64,7 @@ def enviando_email():
     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
     
+    from pandas.io.formats.info import DataFrameTableBuilder
     ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
     despesas_total = []
 
@@ -86,20 +87,18 @@ def enviando_email():
         for despesa in despesas:
             despesa['siglaUf'] = deputado['siglaUf']
             despesa['nomeParlamentar'] = deputado['nome']
-
-        despesas_total.extend(despesas)
+            despesas_total.append(despesa)
 
     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
-    
-    enviadas = [row['codDocumento'] for row in sheet.get_rows()]
-    novas = [despesa for despesa in despesas_acima_100 if despesa['codDocumento'] not in enviadas]
-    sheet.append_rows([[despesa['codDocumento']] for despesa in novas])
 
-    df_despesas=pd.DataFrame(novas)
+    enviadas = [row['codDocumento'] for row in despesas_total]
+    novas = [despesa for despesa in despesas_acima_100 if despesa['codDocumento'] not in enviadas]
+
+    df_despesas = pd.DataFrame(despesas_acima_100)
 
     # Selecionando apenas as colunas que você deseja manter no arquivo CSV
-    df_despesas = df_despesas[['nomeParlamentar', 'siglaUf', 'tipoDespesa', 'nomeFornecedor','cnpjCpfFornecedor','valorLiquido', 'mes', 'ano']]
+    df_despesas = df_despesas[['nomeParlamentar', 'siglaUf', 'tipoDespesa', 'nomeFornecedor','cnpjCpfFornecedor','valorLiquido', 'mes', 'ano','codDocumento']]
 
     # Salvando o DataFrame como um arquivo CSV
     df_despesas.to_csv('despesas_alimentacao.csv', index=False)
