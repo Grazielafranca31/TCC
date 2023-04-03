@@ -92,9 +92,10 @@ def enviando_email():
     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
     
-    enviadas=sheet.get_rows['codDocumento']
-    novas= [despesas for despesa in despesas_acima_100 if despesa['codDocumento'] not in enviadas
-    sheet.append_rows([despesa['codDocumento'] for despesa in novas])
+    enviadas = [row['codDocumento'] for row in sheet.get_rows()]
+    novas = [despesa for despesa in despesas_acima_100 if despesa['codDocumento'] not in enviadas]
+    sheet.append_rows([[despesa['codDocumento']] for despesa in novas])
+
     df_despesas=pd.DataFrame(novas)
 
     # Selecionando apenas as colunas que você deseja manter no arquivo CSV
