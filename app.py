@@ -60,34 +60,8 @@ def enviando_email():
 
         despesas_total.extend(despesas)
         despesas_total.append(despesa)
-
-#     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
-#     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
     
-    from pandas.io.formats.info import DataFrameTableBuilder
-#     ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
-#     despesas_total = []
-
-#     for deputado in deputados:
-#         url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
-#         params_despesas = {
-#             'formato': 'json',
-#             'itens': 100,
-#              'ordenarPor':'ano',
-#              'ordem':'DESC'
-#         }
-
-#         response_despesas= requests.get(url_despesas, params=params_despesas)
-
-#         if response_despesas.status_code == 200:
-#             despesas = response_despesas.json()['dados']
-#         else:
-#             despesas = []
-
-#         for despesa in despesas:
-#             despesa['siglaUf'] = deputado['siglaUf']
-#             despesa['nomeParlamentar'] = deputado['nome']
-
+    #from pandas.io.formats.info import DataFrameTableBuilder
     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
 
@@ -103,10 +77,8 @@ def enviando_email():
     df_despesas.to_csv('despesas_alimentacao.csv', index=False)
 
     valor_liquido= df_despesas['valorLiquido']
-    valor_liquido
 
     nome_estabelecimento=df_despesas['nomeFornecedor']
-    nome_estabelecimento
 
     #datas e dias da semana
 
@@ -168,10 +140,10 @@ def enviando_email():
     from_email = Email("ola@agenciatatu.com.br")  # Change to your verified sender
     to_email = To("graziela.fcs@gmail.com")  # Change to your recipient
     subject = "Confira as despesas com alimentação dos deputados federais do NE"
-    if dia_semana == "sábado" or dia_semana == "domingo":
-        pronome = 'No'
-    else:
-        pronome = 'Na'
+#     if dia_semana == "sábado" or dia_semana == "domingo":
+#         pronome = 'No'
+#     else:
+#         pronome = 'Na'
 
     conteudo_email = f"{textofinal}" 
     content = Content("text/plain", conteudo_email)
