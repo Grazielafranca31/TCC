@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def gastos_deputados():
-  return "olá"
+  return "Olá, este site coleta os gastos com alimentação dos deputados federais dos estados do Nordeste"
 
 @app.route('/sobre')
 def enviando_email():
@@ -39,7 +39,7 @@ def enviando_email():
     ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
     despesas_total = []
 
-    for deputado in deputados:
+    for deputado in deputados[:2]:
         url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
         params_despesas = {
             'formato': 'json',
@@ -61,32 +61,32 @@ def enviando_email():
 
         despesas_total.extend(despesas)
 
-    despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
-    despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
+#     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
+#     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
     
     from pandas.io.formats.info import DataFrameTableBuilder
-    ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
-    despesas_total = []
+#     ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
+#     despesas_total = []
 
-    for deputado in deputados:
-        url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
-        params_despesas = {
-            'formato': 'json',
-            'itens': 100,
-             'ordenarPor':'ano',
-             'ordem':'DESC'
-        }
+#     for deputado in deputados:
+#         url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
+#         params_despesas = {
+#             'formato': 'json',
+#             'itens': 100,
+#              'ordenarPor':'ano',
+#              'ordem':'DESC'
+#         }
 
-        response_despesas= requests.get(url_despesas, params=params_despesas)
+#         response_despesas= requests.get(url_despesas, params=params_despesas)
 
-        if response_despesas.status_code == 200:
-            despesas = response_despesas.json()['dados']
-        else:
-            despesas = []
+#         if response_despesas.status_code == 200:
+#             despesas = response_despesas.json()['dados']
+#         else:
+#             despesas = []
 
-        for despesa in despesas:
-            despesa['siglaUf'] = deputado['siglaUf']
-            despesa['nomeParlamentar'] = deputado['nome']
+#         for despesa in despesas:
+#             despesa['siglaUf'] = deputado['siglaUf']
+#             despesa['nomeParlamentar'] = deputado['nome']
             despesas_total.append(despesa)
 
     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
