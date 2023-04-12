@@ -1,5 +1,4 @@
 from flask import Flask
-
 import requests
 import pandas as pd
 import json
@@ -15,7 +14,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def gastos_deputados():
-  return "Olá, este site coleta os gastos com alimentação dos deputados federais dos estados do Nordeste"
+    return "Olá, este site coleta os gastos com alimentação dos deputados federais dos estados do Nordeste"
 
 @app.route('/sobre')
 def enviando_email():
@@ -23,9 +22,9 @@ def enviando_email():
     params = {
         'formato': 'json',
         'itens': 100,
-        'siglaUf':'AL,BA,CE,MA,PB,PE,PI,RN,SE',
-        'idLegislatura':'57',
-        'ordenarPor':'siglaUf'
+        'siglaUf': 'AL,BA,CE,MA,PB,PE,PI,RN,SE',
+        'idLegislatura': '57',
+        'ordenarPor': 'siglaUf'
     }
 
     response = requests.get(url, params=params)
@@ -44,11 +43,11 @@ def enviando_email():
         params_despesas = {
             'formato': 'json',
             'itens': 100,
-             'ordenarPor':'ano',
-             'ordem':'DESC'
+            'ordenarPor': 'ano',
+            'ordem': 'DESC'
         }
 
-        response_despesas= requests.get(url_despesas, params=params_despesas)
+        response_despesas = requests.get(url_despesas, params=params_despesas)
 
         if response_despesas.status_code == 200:
             despesas = response_despesas.json()['dados']
@@ -60,6 +59,7 @@ def enviando_email():
             despesa['nomeParlamentar'] = deputado['nome']
 
         despesas_total.extend(despesas)
+        despesas_total.append(despesa)
 
 #     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
 #     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
@@ -87,7 +87,6 @@ def enviando_email():
 #         for despesa in despesas:
 #             despesa['siglaUf'] = deputado['siglaUf']
 #             despesa['nomeParlamentar'] = deputado['nome']
-            despesas_total.append(despesa)
 
     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
