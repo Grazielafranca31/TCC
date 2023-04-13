@@ -136,14 +136,11 @@ def enviando_email():
         textofinal = "".join(linhas)
         print(textofinal)
 
-    sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
+    carteiro = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
+    #sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
     from_email = Email("ola@agenciatatu.com.br")  # Change to your verified sender
     to_email = To("graziela.fcs@gmail.com")  # Change to your recipient
     subject = "Confira as despesas com alimentação dos deputados federais do NE"
-#     if dia_semana == "sábado" or dia_semana == "domingo":
-#         pronome = 'No'
-#     else:
-#         pronome = 'Na'
 
     conteudo_email = f"{textofinal}" 
     content = Content("text/plain", conteudo_email)
