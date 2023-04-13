@@ -136,7 +136,7 @@ def enviando_email():
         textofinal = "".join(linhas)
         print(textofinal)
 
-    carteiro = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
     #sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
     from_email = Email("ola@agenciatatu.com.br")  # Change to your verified sender
     to_email = To("graziela.fcs@gmail.com")  # Change to your recipient
