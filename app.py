@@ -35,6 +35,7 @@ def enviando_email():
         print('Erro ao obter dados dos deputados')
         deputados = []
 
+    from pandas.io.formats.info import DataFrameTableBuilder
     ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
     despesas_total = []
 
@@ -43,25 +44,22 @@ def enviando_email():
         params_despesas = {
             'formato': 'json',
             'itens': 100,
-            'ordenarPor': 'ano',
-            'ordem': 'DESC'
+             'ordenarPor':'ano',
+             'ordem':'DESC'
         }
 
-        response_despesas = requests.get(url_despesas, params=params_despesas)
+        response_despesas= requests.get(url_despesas, params=params_despesas)
 
         if response_despesas.status_code == 200:
             despesas = response_despesas.json()['dados']
         else:
-            despesas = []
+            despesas = []    
 
         for despesa in despesas:
             despesa['siglaUf'] = deputado['siglaUf']
             despesa['nomeParlamentar'] = deputado['nome']
+            despesas_total.append(despesa)
 
-        despesas_total.extend(despesas)
-        despesas_total.append(despesa)
-    
-    #from pandas.io.formats.info import DataFrameTableBuilder
     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
 
@@ -76,9 +74,47 @@ def enviando_email():
     # Salvando o DataFrame como um arquivo CSV
     df_despesas.to_csv('despesas_alimentacao.csv', index=False)
 
-    valor_liquido= df_despesas['valorLiquido']
+    
+#     ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
+#     despesas_total = []
 
-    nome_estabelecimento=df_despesas['nomeFornecedor']
+#     for deputado in deputados[:2]:
+#         url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
+#         params_despesas = {
+#             'formato': 'json',
+#             'itens': 100,
+#             'ordenarPor': 'ano',
+#             'ordem': 'DESC'
+#         }
+
+#         response_despesas = requests.get(url_despesas, params=params_despesas)
+
+#         if response_despesas.status_code == 200:
+#             despesas = response_despesas.json()['dados']
+#         else:
+#             despesas = []
+
+#         for despesa in despesas:
+#             despesa['siglaUf'] = deputado['siglaUf']
+#             despesa['nomeParlamentar'] = deputado['nome']
+
+#         despesas_total.extend(despesas)
+#         despesas_total.append(despesa)
+    
+#     #from pandas.io.formats.info import DataFrameTableBuilder
+#     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
+#     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
+
+#     enviadas = [row['codDocumento'] for row in despesas_total]
+#     novas = [despesa for despesa in despesas_acima_100 if despesa['codDocumento'] not in enviadas]
+
+#     df_despesas = pd.DataFrame(despesas_acima_100)
+
+#     # Selecionando apenas as colunas que você deseja manter no arquivo CSV
+#     df_despesas = df_despesas[['nomeParlamentar', 'siglaUf', 'tipoDespesa', 'nomeFornecedor','cnpjCpfFornecedor','valorLiquido', 'mes', 'ano','codDocumento']]
+
+#     # Salvando o DataFrame como um arquivo CSV
+#     df_despesas.to_csv('despesas_alimentacao.csv', index=False)
 
     #datas e dias da semana
 
