@@ -74,7 +74,7 @@ def enviando_email():
     despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
     despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
 
-    df_despesas = pd.DataFrame(despesas_alimentacao)
+    df_despesas = pd.DataFrame(despesas_acima_100)
 
     # Selecionando apenas as colunas que você deseja manter no arquivo CSV
     df_despesas = df_despesas[['nomeParlamentar', 'siglaUf', 'tipoDespesa', 'nomeFornecedor','cnpjCpfFornecedor','valorLiquido', 'mes', 'ano','codDocumento']]
