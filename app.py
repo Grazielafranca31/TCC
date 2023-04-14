@@ -84,7 +84,7 @@ def enviando_email():
     # Salvando o DataFrame como um arquivo CSV
     df_despesas.to_csv('despesas_alimentacao.csv', index=False)
 
-   from datetime import date, datetime
+from datetime import date, datetime
 
 hj = date.today()
 data_atual = datetime.now()
