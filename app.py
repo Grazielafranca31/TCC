@@ -84,75 +84,54 @@ def enviando_email():
     # Salvando o DataFrame como um arquivo CSV
     df_despesas.to_csv('despesas_alimentacao.csv', index=False)
 
-    #datas e dias da semana
-    hj = date.today()
-    data_atual = datetime.now()
-    mes_atual = data_atual.strftime('%m')
-    dia_atual = data_atual.strftime('%d')
+   from datetime import date, datetime
 
-    meses_pt = {
-        "January": "Janeiro",
-        "February": "Fevereiro",
-        "March": "Março",
-        "April": "Abril",
-        "May": "Maio",
-        "June": "Junho",
-        "July": "Julho",
-        "August": "Agosto",
-        "September": "Setembro",
-        "October": "Outubro",
-        "November": "Novembro",
-        "December": "Dezembro"
-    }
-    linhas = []
-    # loop através de cada linha do dataframe "despesas"
-    
-    
-    for index, row in df_despesas.iterrows():
-        parlamentar = row["nomeParlamentar"]
-        nome_estabelecimento= row['nomeFornecedor']
-        valor_liquido = row['valorLiquido']
-        mes = meses_pt[datetime.strptime(str(row['mes']), '%m').strftime('%B')]
-        ano=row['ano']
-        cnpj=row['cnpjCpfFornecedor']
+hj = date.today()
+data_atual = datetime.now()
+mes_atual = data_atual.strftime('%m')
+dia_atual = data_atual.strftime('%d')
 
-        # aqui vem o resto do código para gerar o texto do e-mail para cada despesa      
-        # texto introdutório
-        texto_intro = "Olá, como vai? A seguir você confere a lista de despesas com alimentação, a partir de R$100, dos deputados e deputadas federais dos estados do Nordeste da atual legislatura:\n\n"
+meses_pt = {
+    "January": "janeiro",
+    "February": "fevereiro",
+    "March": "março",
+    "April": "abril",
+    "May": "maio",
+    "June": "junho",
+    "July": "julho",
+    "August": "agosto",
+    "September": "setembro",
+    "October": "outubro",
+    "November": "novembro",
+    "December": "dezembro"
+}
+linhas = []
 
-        # inicia a lista de linhas vazia
-        linhas = []
+# loop através de cada linha do dataframe "despesas"
+for index, row in df_despesas.iterrows():
+    parlamentar = row['nomeParlamentar']
+    nome_estabelecimento = row['nomeFornecedor']
+    valor_liquido = row['valorLiquido']
+    mes = row['mes']
+    mes_extenso = meses_pt[datetime.strptime(str(mes), '%m').strftime('%B')]
+    ano = row['ano']
+    cnpj = row['cnpjCpfFornecedor']
+    estado=row['siglaUf']
 
-        # loop sobre as despesas do parlamentar
-        for despesa in despesas:
+    # texto introdutório
+    texto_intro = "Olá, como vai? A seguir você confere a lista de despesas com alimentação, a partir de R$100, dos deputados e deputadas federais dos estados do Nordeste da atual legislatura:\n\n"
 
-            # extrai os dados da despesa
-            mes = despesa['mes']
-            mes_extenso = meses_pt[datetime.strptime(str(mes), '%m').strftime('%B').lower()]
-            ano = despesa['ano']
-            parlamentar = despesa['nomeParlamentar']
-            valor_liquido = despesa['valorLiquido']
-            nome_estabelecimento = despesa['nomeFornecedor']
-            cnpj = despesa['cnpjCpfFornecedor']
-            estado = despesa['siglaUf']
+    # gera o texto da despesa
+    texto = (f"No mês de {mes_extenso} de {ano}, {parlamentar} ({estado}) gastou R$ {valor_liquido} no estabelecimento {nome_estabelecimento}, que tem como CNPJ {cnpj}.")
 
-            # gera o texto da despesa
-            texto = (f"No mês de {mes} de {ano}, {parlamentar} ({estado}) gastou R$ {valor_liquido} no estabelecimento {nome_estabelecimento}, que tem como CNPJ {cnpj}.")
+    # adiciona o texto da despesa à lista de linhas
+    linhas.append(texto + "\n")
 
-            # adiciona o texto da despesa à lista de linhas
-            linhas.append(texto + "\n")
+    # junta todas as linhas em uma única string
+    textofinal = "".join(linhas)
 
-        # adiciona a quebra de linha
-        linhas.append("\n")
-
-        # junta todas as linhas em uma única string
-        textofinal = "".join(linhas)
-
-        # adiciona o texto introdutório no início da string
-        textofinal = texto_intro.format(mes=mes, ano=ano) + textofinal
-
-        # imprime o texto final
-        print(textofinal)
+    # adiciona o texto introdutório no início da string
+    textofinal = texto_intro + textofinal
 
 
     sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
