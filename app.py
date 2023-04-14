@@ -37,7 +37,7 @@ def enviando_email():
         print('Erro ao obter dados dos deputados')
         deputados = []
         
-    #Filtrando apenas as despesas com alimentação 
+    #Filtrar apenas as despesas com alimentação 
     from pandas.io.formats.info import DataFrameTableBuilder
     ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
     despesas_total = []
@@ -50,7 +50,7 @@ def enviando_email():
     # Criar um conjunto contendo todos os códigos de documentos enviados
     cod_documentos_enviados = set(row['codDocumento'] for row in despesas_total)
 
-    for deputado in deputados[:2]:
+    for deputado in deputados:
         url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
         params_despesas = {
             'formato': 'json',
@@ -78,7 +78,7 @@ def enviando_email():
 
     df_despesas = pd.DataFrame(despesas_acima_100)
 
-    # Selecionando apenas as colunas que você deseja manter no arquivo CSV
+    # Selecionando apenas as colunas que quero manter no arquivo CSV
     df_despesas = df_despesas[['nomeParlamentar', 'siglaUf', 'tipoDespesa', 'nomeFornecedor','cnpjCpfFornecedor','valorLiquido', 'mes', 'ano','codDocumento']]
 
     # Salvando o DataFrame como um arquivo CSV
@@ -94,12 +94,6 @@ def enviando_email():
     dia_atual = data_atual.strftime('%d')
 
     estado = ['BA', 'SE', 'AL', 'PE', 'RN', 'PB', 'CE', 'PI', 'MA']
-
-    #informações do fornecedor e gastos
-
-    nomeFornecedor='' #como trazer as informações do fornecedor para essa variável?
-
-    valorLiquido='' #como trazer as informações do valor para essa variável?
 
     meses_pt = {
         "January": "Janeiro",
@@ -134,7 +128,7 @@ def enviando_email():
 #         textofinal = "".join(linhas)
 #         print(textofinal)
         
-        # define o texto introdutório
+        # texto introdutório
         texto_intro = "Olá, como vai? A seguir você confere a lista de despesas do parlamentar no mês de {mes} de {ano}:\n\n"
 
         # inicia a lista de linhas vazia
