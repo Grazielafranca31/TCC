@@ -125,14 +125,50 @@ def enviando_email():
         ano=row['ano']
         cnpj=row['cnpjCpfFornecedor']
 
-        # aqui vem o resto do seu código para gerar o texto do e-mail para cada despesa
+        # aqui vem o resto do código para gerar o texto do e-mail para cada despesa
 
-        texto = (f"No mês de {mes} de {ano}, {parlamentar} gastou R$ {valor_liquido} no estabelecimento {nome_estabelecimento}, que tem como CNPJ {cnpj}.")
-        print(texto) #alterei para imprimir cada texto no console, para visualização
-        linhas.append(texto + "\n") # adiciona a quebra de linha
+#         texto = (f"No mês de {mes} de {ano}, {parlamentar} gastou R$ {valor_liquido} no estabelecimento {nome_estabelecimento}, que tem como CNPJ {cnpj}.")
+#         print(texto) #alterei para imprimir cada texto no console, para visualização
+#         linhas.append(texto + "\n") # adiciona a quebra de linha
+#         # junta todas as linhas em uma única string
+#         textofinal = "".join(linhas)
+#         print(textofinal)
+        
+        # define o texto introdutório
+        texto_intro = "Olá, como vai? A seguir você confere a lista de despesas do parlamentar no mês de {mes} de {ano}:\n\n"
+
+        # inicia a lista de linhas vazia
+        linhas = []
+
+        # loop sobre as despesas do parlamentar
+        for despesa in despesas:
+
+            # extrai os dados da despesa
+            mes = despesa['mes']
+            ano = despesa['ano']
+            parlamentar = despesa['parlamentar']
+            valor_liquido = despesa['valor_liquido']
+            nome_estabelecimento = despesa['nome_estabelecimento']
+            cnpj = despesa['cnpj']
+
+            # gera o texto da despesa
+            texto = (f"No mês de {mes} de {ano}, {parlamentar} gastou R$ {valor_liquido} no estabelecimento {nome_estabelecimento}, que tem como CNPJ {cnpj}.")
+
+            # adiciona o texto da despesa à lista de linhas
+            linhas.append(texto + "\n")
+
+        # adiciona a quebra de linha
+        linhas.append("\n")
+
         # junta todas as linhas em uma única string
         textofinal = "".join(linhas)
+
+        # adiciona o texto introdutório no início da string
+        textofinal = texto_intro.format(mes=mes, ano=ano) + textofinal
+
+        # imprime o texto final
         print(textofinal)
+
 
     sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
     from_email = Email("ola@agenciatatu.com.br")  # Change to your verified sender
