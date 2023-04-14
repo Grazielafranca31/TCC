@@ -43,35 +43,35 @@ def enviando_email():
     despesas_total = []
     
     # Verificar se já existe um arquivo CSV com despesas antigas
-if os.path.exists('despesas_alimentacao.csv'):
-    df_despesas_antigas = pd.read_csv('despesas_alimentacao.csv')
-    despesas_total = df_despesas_antigas.to_dict('records')
+    if os.path.exists('despesas_alimentacao.csv'):
+        df_despesas_antigas = pd.read_csv('despesas_alimentacao.csv')
+        despesas_total = df_despesas_antigas.to_dict('records')
 
-# Criar um conjunto contendo todos os códigos de documentos enviados
-cod_documentos_enviados = set(row['codDocumento'] for row in despesas_total)
+    # Criar um conjunto contendo todos os códigos de documentos enviados
+    cod_documentos_enviados = set(row['codDocumento'] for row in despesas_total)
 
-for deputado in deputados[:10]:
-    url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
-    params_despesas = {
-        'formato': 'json',
-        'itens': 100,
-        'ordenarPor': 'ano',
-        'ordem': 'DESC'
-    }
+    for deputado in deputados[:10]:
+        url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
+        params_despesas = {
+            'formato': 'json',
+            'itens': 100,
+            'ordenarPor': 'ano',
+            'ordem': 'DESC'
+        }
 
-    response_despesas = requests.get(url_despesas, params=params_despesas)
+        response_despesas = requests.get(url_despesas, params=params_despesas)
 
-    if response_despesas.status_code == 200:
-        despesas = response_despesas.json()['dados']
-    else:
-        despesas = []
+        if response_despesas.status_code == 200:
+            despesas = response_despesas.json()['dados']
+        else:
+            despesas = []
 
-    for despesa in despesas:
-        despesa['siglaUf'] = deputado['siglaUf']
-        despesa['nomeParlamentar'] = deputado['nome']
-        if despesa['codDocumento'] not in cod_documentos_enviados:
-            despesas_total.append(despesa)
-            cod_documentos_enviados.add(despesa['codDocumento'])
+        for despesa in despesas:
+            despesa['siglaUf'] = deputado['siglaUf']
+            despesa['nomeParlamentar'] = deputado['nome']
+            if despesa['codDocumento'] not in cod_documentos_enviados:
+                despesas_total.append(despesa)
+                cod_documentos_enviados.add(despesa['codDocumento'])
 
 despesas_alimentacao = [despesa for despesa in despesas_total if despesa['tipoDespesa'] == ALIMENTACAO]
 despesas_acima_100 = [despesa for despesa in despesas_alimentacao if despesa['valorLiquido'] >= 100]
