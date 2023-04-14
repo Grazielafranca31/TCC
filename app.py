@@ -81,8 +81,8 @@ def enviando_email():
     # Selecionando apenas as colunas que quero manter no arquivo CSV
     df_despesas = df_despesas[['nomeParlamentar', 'siglaUf', 'tipoDespesa', 'nomeFornecedor','cnpjCpfFornecedor','valorLiquido', 'mes', 'ano','codDocumento']]
 
-    # Salvando o DataFrame como um arquivo CSV
-    df_despesas.to_csv('despesas_alimentacao.csv', index=False)
+#     # Salvando o DataFrame como um arquivo CSV
+#     df_despesas.to_csv('despesas_alimentacao.csv', index=False)
 
 from datetime import date, datetime
 
