@@ -127,26 +127,26 @@ for index, row in df_despesas.iterrows():
     # adiciona o texto da despesa à lista de linhas
     linhas.append(texto + "\n")
 
-    # junta todas as linhas em uma única string
-    textofinal = "".join(linhas)
+# junta todas as linhas em uma única string
+textofinal = "".join(linhas)
 
-    # adiciona o texto introdutório no início da string
-    textofinal = texto_intro + textofinal
-
-
-    sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
-    from_email = Email("ola@agenciatatu.com.br")  # Change to your verified sender
-    to_email = To("graziela.fcs@gmail.com")  # Change to your recipient
-    subject = "Confira as despesas com alimentação dos deputados federais do NE"
-
-    conteudo_email = f"{textofinal}" 
-    content = Content("text/plain", conteudo_email)
-    mail = Mail(from_email, to_email, subject, content)
+# adiciona o texto introdutório no início da string
+textofinal = texto_intro + textofinal
 
 
-    # Get a JSON-ready representation of the Mail object
-    mail_json = mail.get()
-    # Send an HTTP POST request to /mail/send
-    response = sg.client.mail.send.post(request_body=mail_json)
-    print(response.status_code)
-    print(response.headers)
+sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
+from_email = Email("ola@agenciatatu.com.br")  # Change to your verified sender
+to_email = To("graziela.fcs@gmail.com")  # Change to your recipient
+subject = "Confira as despesas com alimentação dos deputados federais do NE"
+
+conteudo_email = f"{textofinal}" 
+content = Content("text/plain", conteudo_email)
+mail = Mail(from_email, to_email, subject, content)
+
+
+# Get a JSON-ready representation of the Mail object
+mail_json = mail.get()
+# Send an HTTP POST request to /mail/send
+response = sg.client.mail.send.post(request_body=mail_json)
+print(response.status_code)
+print(response.headers)
