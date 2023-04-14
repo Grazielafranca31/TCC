@@ -85,15 +85,10 @@ def enviando_email():
     df_despesas.to_csv('despesas_alimentacao.csv', index=False)
 
     #datas e dias da semana
-
     hj = date.today()
-    dias = ('terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado', 'domingo', 'segunda-feira')
-    dia_semana = dias[hj.weekday()]
     data_atual = datetime.now()
     mes_atual = data_atual.strftime('%m')
     dia_atual = data_atual.strftime('%d')
-
-    estado = ['BA', 'SE', 'AL', 'PE', 'RN', 'PB', 'CE', 'PI', 'MA']
 
     meses_pt = {
         "January": "Janeiro",
@@ -111,25 +106,19 @@ def enviando_email():
     }
     linhas = []
     # loop através de cada linha do dataframe "despesas"
+    
+    
     for index, row in df_despesas.iterrows():
         parlamentar = row["nomeParlamentar"]
         nome_estabelecimento= row['nomeFornecedor']
         valor_liquido = row['valorLiquido']
-        mes = meses_pt[datetime.strptime(str(row['mes']), '%m').strftime('%B')].lower()
+        mes = meses_pt[datetime.strptime(str(row['mes']), '%m').strftime('%B')]
         ano=row['ano']
         cnpj=row['cnpjCpfFornecedor']
 
-        # aqui vem o resto do código para gerar o texto do e-mail para cada despesa
-
-#         texto = (f"No mês de {mes} de {ano}, {parlamentar} gastou R$ {valor_liquido} no estabelecimento {nome_estabelecimento}, que tem como CNPJ {cnpj}.")
-#         print(texto) #alterei para imprimir cada texto no console, para visualização
-#         linhas.append(texto + "\n") # adiciona a quebra de linha
-#         # junta todas as linhas em uma única string
-#         textofinal = "".join(linhas)
-#         print(textofinal)
-        
+        # aqui vem o resto do código para gerar o texto do e-mail para cada despesa      
         # texto introdutório
-        texto_intro = "Olá, como vai? A seguir você confere a lista de despesas do parlamentar no mês de {mes} de {ano}:\n\n"
+        texto_intro = "Olá, como vai? A seguir você confere a lista de despesas com alimentação, a partir de R$100, dos deputados e deputadas federais dos estados do Nordeste da atual legislatura:\n\n"
 
         # inicia a lista de linhas vazia
         linhas = []
@@ -139,14 +128,16 @@ def enviando_email():
 
             # extrai os dados da despesa
             mes = despesa['mes']
+            mes_extenso = meses_pt[datetime.strptime(str(mes), '%m').strftime('%B').lower()]
             ano = despesa['ano']
-            parlamentar = despesa['parlamentar']
-            valor_liquido = despesa['valor_liquido']
-            nome_estabelecimento = despesa['nome_estabelecimento']
-            cnpj = despesa['cnpj']
+            parlamentar = despesa['nomeParlamentar']
+            valor_liquido = despesa['valorLiquido']
+            nome_estabelecimento = despesa['nomeFornecedor']
+            cnpj = despesa['cnpjCpfFornecedor']
+            estado = despesa['siglaUf']
 
             # gera o texto da despesa
-            texto = (f"No mês de {mes} de {ano}, {parlamentar} gastou R$ {valor_liquido} no estabelecimento {nome_estabelecimento}, que tem como CNPJ {cnpj}.")
+            texto = (f"No mês de {mes} de {ano}, {parlamentar} ({estado}) gastou R$ {valor_liquido} no estabelecimento {nome_estabelecimento}, que tem como CNPJ {cnpj}.")
 
             # adiciona o texto da despesa à lista de linhas
             linhas.append(texto + "\n")
