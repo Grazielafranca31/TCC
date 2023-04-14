@@ -50,7 +50,7 @@ def enviando_email():
     # Criar um conjunto contendo todos os códigos de documentos enviados
     cod_documentos_enviados = set(row['codDocumento'] for row in despesas_total)
 
-    for deputado in deputados:
+    for deputado in deputados[:10]:
         url_despesas = f'https://dadosabertos.camara.leg.br/api/v2/deputados/{deputado["id"]}/despesas'
         params_despesas = {
             'formato': 'json',
