@@ -17,6 +17,7 @@ app = Flask(__name__)
 def gastos_deputados():
     return "Olá, este site coleta os gastos com alimentação dos deputados federais dos estados do Nordeste"
 
+#Função para coletar os dados da API da Câmara dos Deputados, com filtro nos estados do Nordeste
 @app.route('/sobre')
 def enviando_email():
     url = 'https://dadosabertos.camara.leg.br/api/v2/deputados'
@@ -35,7 +36,8 @@ def enviando_email():
     else:
         print('Erro ao obter dados dos deputados')
         deputados = []
-
+        
+    #Filtrando apenas as despesas com alimentação 
     from pandas.io.formats.info import DataFrameTableBuilder
     ALIMENTACAO = 'FORNECIMENTO DE ALIMENTAÇÃO DO PARLAMENTAR'
     despesas_total = []
@@ -91,7 +93,6 @@ def enviando_email():
     mes_atual = data_atual.strftime('%m')
     dia_atual = data_atual.strftime('%d')
 
-    #estado
     estado = ['BA', 'SE', 'AL', 'PE', 'RN', 'PB', 'CE', 'PI', 'MA']
 
     #informações do fornecedor e gastos
@@ -99,11 +100,6 @@ def enviando_email():
     nomeFornecedor='' #como trazer as informações do fornecedor para essa variável?
 
     valorLiquido='' #como trazer as informações do valor para essa variável?
-
-    if dia_semana == "sábado" or dia_semana == "domingo":
-        pronome = 'No'
-    else:
-        pronome = 'Na'
 
     meses_pt = {
         "January": "Janeiro",
